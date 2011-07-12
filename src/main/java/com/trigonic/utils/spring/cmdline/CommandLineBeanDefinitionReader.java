@@ -16,6 +16,7 @@
 
 package com.trigonic.utils.spring.cmdline;
 
+import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
@@ -27,23 +28,31 @@ import org.springframework.beans.factory.support.DefaultBeanNameGenerator;
 
 public class CommandLineBeanDefinitionReader {
     private final BeanDefinitionRegistry registry;
-    
+
     private final BeanNameGenerator beanNameGenerator = new DefaultBeanNameGenerator();
 
     public CommandLineBeanDefinitionReader(BeanDefinitionRegistry registry) {
         this.registry = registry;
     }
-    
+
     public <T> void parse(Class<T> beanClass, String[] args) {
         OptionParser parser = new OptionParser();
         CommandLineMetaData metaData = new CommandLineMetaData(beanClass);
         metaData.register(parser);
-        OptionSet optionSet = parser.parse(args);
-        
-        CommandLineBeanDefinition beanDef = new CommandLineBeanDefinition(beanClass, metaData, optionSet);
-        String beanName = beanNameGenerator.generateBeanName(beanDef, this.registry);
 
-        BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(beanDef, beanName);
-        BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
+        OptionSet optionSet;
+        try {
+            optionSet = parser.parse(args);
+
+            CommandLineBeanDefinition beanDef = new CommandLineBeanDefinition(beanClass, metaData, optionSet);
+            String beanName = beanNameGenerator.generateBeanName(beanDef, this.registry);
+
+            BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(beanDef, beanName);
+            BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
+        } catch (OptionException e) {
+            throw new CommandLineException(parser, metaData, e);
+        } catch (OperandException e) {
+            throw new CommandLineException(parser, metaData, e);
+        }
     }
 }

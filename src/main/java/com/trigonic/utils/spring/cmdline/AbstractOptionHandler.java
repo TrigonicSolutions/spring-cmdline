@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpecBuilder;
@@ -57,10 +58,10 @@ public abstract class AbstractOptionHandler implements OptionHandler {
     public OptionSpecBuilder register(OptionParser parser) {
         OptionSpecBuilder builder = parser.acceptsAll(names(), option.description());
         if (hasValue()) {
-            if (option.requiresValue()) {
-                builder.withRequiredArg();
-            } else {
-                builder.withOptionalArg();
+            ArgumentAcceptingOptionSpec<String> spec = option.requiresValue() ? builder.withRequiredArg() : builder.withOptionalArg();
+            // NOTE: don't specify a type here, leverage Spring's more robust type conversions
+            if (option.required()) {
+                spec = spec.required();
             }
         }
         return builder;
@@ -90,6 +91,7 @@ public abstract class AbstractOptionHandler implements OptionHandler {
     private Collection<String> names() {
         List<String> result = new ArrayList<String>(2);
         addIfNotEmpty(result, option.shortName());
+        addIfNotEmpty(result, option.longName());
         return result;
     }
 

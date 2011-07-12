@@ -23,10 +23,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.FIELD})
-public @interface Option {
-    String shortName() default "";
-    String longName() default "";
+public @interface Operand {
+    int index() default 0;
     String description() default "";
-    boolean required() default false;
-    boolean requiresValue() default true;
+    boolean required() default true;
 }

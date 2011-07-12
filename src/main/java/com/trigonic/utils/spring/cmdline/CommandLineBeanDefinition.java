@@ -34,6 +34,11 @@ public class CommandLineBeanDefinition extends GenericBeanDefinition {
         for (OptionHandler handler : metaData.getOptionHandlers()) {
             handler.addPropertyValue(propertyValues, optionSet);
         }
+        for (OperandHandler handler : metaData.getOperandHandlers()) {
+            if (!handler.addPropertyValue(propertyValues, optionSet) && handler.isRequired()) {
+                throw new OperandException(String.format("Operand [%s] is required", handler.getName()));
+            }
+        }
         setPropertyValues(propertyValues);
     }
 }

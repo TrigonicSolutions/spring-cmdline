@@ -33,6 +33,10 @@ public class CommandLineAppContext extends GenericApplicationContext {
     public <T extends Runnable> void run(Class<T> beanClass, String[] args) {
         try {
             parseAndGet(beanClass, args).run();
+        } catch (CommandLineException e) {
+            e.printUsage();
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             close();
         }

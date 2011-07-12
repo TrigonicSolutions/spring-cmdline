@@ -16,17 +16,10 @@
 
 package com.trigonic.utils.spring.cmdline;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class OperandException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface Option {
-    String shortName() default "";
-    String longName() default "";
-    String description() default "";
-    boolean required() default false;
-    boolean requiresValue() default true;
+    public OperandException(String message) {
+        super(message);
+    }
 }

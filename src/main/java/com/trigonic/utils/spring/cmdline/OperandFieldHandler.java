@@ -16,17 +16,10 @@
 
 package com.trigonic.utils.spring.cmdline;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD})
-public @interface Option {
-    String shortName() default "";
-    String longName() default "";
-    String description() default "";
-    boolean required() default false;
-    boolean requiresValue() default true;
+public class OperandFieldHandler extends AbstractOperandHandler {
+    public OperandFieldHandler(Operand operand, Field field) {
+        super(operand, field.getName(), field.getType());
+    }
 }
