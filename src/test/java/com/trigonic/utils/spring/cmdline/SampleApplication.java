@@ -56,11 +56,12 @@ public class SampleApplication implements Runnable {
     /**
      * Simple way to run the application is the CommandLineAppContext's run method, which manages
      * the lifecycle of the application and invokes the bean's Runnable.run method.  This example
-     * loads the applicationContext.xml file from the classpath into a parent application context
-     * used by the one that loads the application.
+     * loads the application bean alongside the beans from the applicationContext.xml file pulled
+     * from the classpath.  Any post-processors defined there will also control the injection and
+     * instantiation of the application bean.
      */
     public static void main(String[] args) {
-        new CommandLineAppContext().run(SampleApplication.class, args);
+        new CommandLineAppContext("classpath:applicationContext.xml").run(SampleApplication.class, args);
     }
 
     public void run() {
