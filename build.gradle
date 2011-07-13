@@ -30,6 +30,7 @@ buildscript {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -37,6 +38,7 @@ dependencies {
     compile "org.springframework:spring-context:${springVersion}"
     compile "org.springframework:spring-core:${springVersion}"
     compile "net.sf.jopt-simple:jopt-simple:${joptSimpleVersion}"
+    compile 'com.trigonic:spring-utils:0.6'
     
     testCompile 'junit:junit:4.+'
 

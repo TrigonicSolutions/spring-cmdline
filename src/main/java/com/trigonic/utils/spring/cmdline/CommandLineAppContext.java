@@ -16,10 +16,17 @@
 
 package com.trigonic.utils.spring.cmdline;
 
-import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-public class CommandLineAppContext extends GenericApplicationContext {
-    private CommandLineBeanDefinitionReader reader = new CommandLineBeanDefinitionReader(this);
+import com.trigonic.utils.spring.context.XmlResourceApplicationContext;
+
+public class CommandLineAppContext extends XmlResourceApplicationContext {
+    private final CommandLineBeanDefinitionReader reader;
+
+    public CommandLineAppContext(Object... resources) {
+        super(resources);
+        reader = new CommandLineBeanDefinitionReader((DefaultListableBeanFactory) getBeanFactory());
+    }
     
     public void parse(Class<?> beanClass, String[] args) {
         reader.parse(beanClass, args);
