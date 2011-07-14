@@ -5,7 +5,7 @@ apply plugin: 'eclipse'
 
 group = 'com.trigonic'
 artifact = 'spring-cmdline'
-version = '0.1'
+version = '0.2'
 
 springVersion = '3.0.5.RELEASE'
 joptSimpleVersion = '3.3'

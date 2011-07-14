@@ -32,21 +32,21 @@ public class GrepTest {
     @Test
     public void ignoreCaseShort() {
         Grep grep = create("-i", "foo", "bar");
-        assertTrue(grep.isIgnoreCase());
+        assertTrue(grep._isIgnoreCase());
         assertNull(grep.getPatternFile());
     }
 
     @Test
     public void ignoreCaseAtEnd() {
         Grep grep = create("foo", "bar", "-i");
-        assertTrue(grep.isIgnoreCase());
+        assertTrue(grep._isIgnoreCase());
         assertNull(grep.getPatternFile());
     }
     
     @Test
     public void ignoreCaseLong() {
         Grep grep = create("--ignore-case", "foo", "bar");
-        assertTrue(grep.isIgnoreCase());
+        assertTrue(grep._isIgnoreCase());
         assertNull(grep.getPatternFile());
     }
     
@@ -64,45 +64,45 @@ public class GrepTest {
     public void patternFileShort() {
         // TODO: in a proper grep implementation, the pattern would not be collected if -f or -e options were specified
         Grep grep = create("-f", "foo/bar", "foo", "bar");
-        assertFalse(grep.isIgnoreCase());
+        assertFalse(grep._isIgnoreCase());
         assertEquals(new File("foo/bar"), grep.getPatternFile());
         assertEquals("foo", grep.getPattern());
-        assertEquals(1, grep.getFiles().length);
-        assertEquals(new File("bar"), grep.getFiles()[0]);
+        assertEquals(1, grep._getFiles().length);
+        assertEquals(new File("bar"), grep._getFiles()[0]);
     }
     
     @Test
     public void patternFileLong() {
         // TODO: in a proper grep implementation, the pattern would not be collected if -f or -e options were specified
         Grep grep = create("--file", "foo/bar", "foo", "bar");
-        assertFalse(grep.isIgnoreCase());
+        assertFalse(grep._isIgnoreCase());
         assertEquals(new File("foo/bar"), grep.getPatternFile());
         assertEquals("foo", grep.getPattern());
-        assertEquals(1, grep.getFiles().length);
-        assertEquals(new File("bar"), grep.getFiles()[0]);
+        assertEquals(1, grep._getFiles().length);
+        assertEquals(new File("bar"), grep._getFiles()[0]);
     }
     
     @Test
     public void patternFileLongEquals() {
         // TODO: in a proper grep implementation, the pattern would not be collected if -f or -e options were specified
         Grep grep = create("--file=foo/bar", "foo", "bar");
-        assertFalse(grep.isIgnoreCase());
+        assertFalse(grep._isIgnoreCase());
         assertEquals(new File("foo/bar"), grep.getPatternFile());
         assertEquals("foo", grep.getPattern());
-        assertEquals(1, grep.getFiles().length);
-        assertEquals(new File("bar"), grep.getFiles()[0]);
+        assertEquals(1, grep._getFiles().length);
+        assertEquals(new File("bar"), grep._getFiles()[0]);
     }
     
     @Test
     public void multipleFiles() {
         Grep grep = create("foo", "bar", "baz", "yotz");
-        assertFalse(grep.isIgnoreCase());
+        assertFalse(grep._isIgnoreCase());
         assertEquals("foo", grep.getPattern());
         assertNull(grep.getPatternFile());
-        assertEquals(3, grep.getFiles().length);
-        assertEquals(new File("bar"), grep.getFiles()[0]);
-        assertEquals(new File("baz"), grep.getFiles()[1]);
-        assertEquals(new File("yotz"), grep.getFiles()[2]);
+        assertEquals(3, grep._getFiles().length);
+        assertEquals(new File("bar"), grep._getFiles()[0]);
+        assertEquals(new File("baz"), grep._getFiles()[1]);
+        assertEquals(new File("yotz"), grep._getFiles()[2]);
     }
     
     @Test

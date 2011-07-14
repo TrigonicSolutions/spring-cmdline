@@ -18,8 +18,10 @@ package com.trigonic.utils.spring.cmdline;
 
 import java.beans.PropertyDescriptor;
 
+import org.springframework.beans.BeanUtils;
+
 public class OperandPropertyHandler extends AbstractOperandHandler {
-    public OperandPropertyHandler(Operand operand, PropertyDescriptor property) {
-        super(operand, property.getName(), property.getReadMethod().getReturnType());
+    public OperandPropertyHandler(Operand operand, PropertyDescriptor property, Class<?> beanClass) {
+        super(operand, property.getName(), BeanUtils.findPropertyType(property.getName(), new Class[] { beanClass }));
     }
 }

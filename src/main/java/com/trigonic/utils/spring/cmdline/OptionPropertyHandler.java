@@ -18,8 +18,10 @@ package com.trigonic.utils.spring.cmdline;
 
 import java.beans.PropertyDescriptor;
 
+import org.springframework.beans.BeanUtils;
+
 public class OptionPropertyHandler extends AbstractOptionHandler {
-    public OptionPropertyHandler(Option option, PropertyDescriptor property) {
-        super(option, property.getName(), property.getReadMethod().getReturnType());
+    public OptionPropertyHandler(Option option, PropertyDescriptor property, Class<?> beanClass) {
+        super(option, property.getName(), BeanUtils.findPropertyType(property.getName(), new Class[] { beanClass }));
     }
 }

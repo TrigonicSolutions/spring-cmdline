@@ -36,13 +36,14 @@ public class Grep implements Runnable {
 
     @Operand(index=1, description="Files to search")
     private File[] files;
-
+    
     @Option(shortName="i", longName="ignore-case", description="Ignore letter case in search")
     public void setIgnoreCase(boolean caseignoreCase) {
         this.ignoreCase = caseignoreCase;
     }
-
-    public boolean isIgnoreCase() {
+    
+    // hack to ensure isIgnoreCase doesn't have a getter
+    public boolean _isIgnoreCase() {
         return ignoreCase;
     }
 
@@ -66,10 +67,11 @@ public class Grep implements Runnable {
         this.files = files;
     }
 
-    public File[] getFiles() {
+    // hack to ensure isIgnoreCase doesn't have a getter
+    public File[] _getFiles() {
         return files;
     }
-
+    
     public ApplicationContext getAppContext() {
         return appContext;
     }

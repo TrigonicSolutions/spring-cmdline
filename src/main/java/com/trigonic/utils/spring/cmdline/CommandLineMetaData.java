@@ -79,10 +79,10 @@ public class CommandLineMetaData {
         }
     }
 
-    private PropertyDescriptor getPropertyForMethod(Annotation annotation, Method method) {
+    private PropertyDescriptor getPropertyForMethod(String annotationType, Annotation annotation, Method method) {
         PropertyDescriptor property = BeanUtils.findPropertyForMethod(method);
         if (property == null) {
-            throw new BeanDefinitionStoreException("@" + annotation.getClass().getSimpleName() + " annotation cannot be applied to non-property methods");
+            throw new BeanDefinitionStoreException(annotationType + " annotation cannot be applied to non-property methods");
         }
         return property;
     }
@@ -101,7 +101,7 @@ public class CommandLineMetaData {
         for (Method method : beanClass.getDeclaredMethods()) {
             Operand operand = method.getAnnotation(Operand.class);
             if (operand != null) {
-                operands.put(operand, new OperandPropertyHandler(operand, getPropertyForMethod(operand, method)));
+                operands.put(operand, new OperandPropertyHandler(operand, getPropertyForMethod("@Operand", operand, method), beanClass));
             }
         }
     }
@@ -120,7 +120,7 @@ public class CommandLineMetaData {
         for (Method method : beanClass.getDeclaredMethods()) {
             Option option = method.getAnnotation(Option.class);
             if (option != null) {
-                options.put(option, new OptionPropertyHandler(option, getPropertyForMethod(option, method)));
+                options.put(option, new OptionPropertyHandler(option, getPropertyForMethod("@Option", option, method), beanClass));
             }
         }
     }
