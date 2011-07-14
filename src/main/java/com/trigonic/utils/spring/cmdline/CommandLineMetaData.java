@@ -88,6 +88,10 @@ public class CommandLineMetaData {
     }
 
     private void populateOperandFields(Class<?> beanClass) {
+        Class<?> superClass = beanClass.getSuperclass();
+        if (!superClass.equals(Object.class)) {
+            populateOperandFields(superClass);
+        }
         for (Field field : beanClass.getDeclaredFields()) {
             Operand operand = field.getAnnotation(Operand.class);
             if (operand != null) {
@@ -98,6 +102,10 @@ public class CommandLineMetaData {
     }
 
     private void populateOperandMethods(Class<?> beanClass) {
+        Class<?> superClass = beanClass.getSuperclass();
+        if (!superClass.equals(Object.class)) {
+            populateOperandMethods(superClass);
+        }
         for (Method method : beanClass.getDeclaredMethods()) {
             Operand operand = method.getAnnotation(Operand.class);
             if (operand != null) {
@@ -107,6 +115,10 @@ public class CommandLineMetaData {
     }
 
     private void populateOptionFields(Class<?> beanClass) {
+        Class<?> superClass = beanClass.getSuperclass();
+        if (!superClass.equals(Object.class)) {
+            populateOptionFields(superClass);
+        }
         for (Field field : beanClass.getDeclaredFields()) {
             Option option = field.getAnnotation(Option.class);
             if (option != null) {
@@ -117,6 +129,10 @@ public class CommandLineMetaData {
     }
 
     private void populateOptionMethods(Class<?> beanClass) {
+        Class<?> superClass = beanClass.getSuperclass();
+        if (!superClass.equals(Object.class)) {
+            populateOptionMethods(superClass);
+        }
         for (Method method : beanClass.getDeclaredMethods()) {
             Option option = method.getAnnotation(Option.class);
             if (option != null) {
