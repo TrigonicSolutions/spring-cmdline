@@ -22,23 +22,32 @@ import java.io.IOException;
 
 import joptsimple.OptionParser;
 
-public class CommandLineException extends RuntimeException {
+public class UsageException extends RuntimeException {
     private static final long serialVersionUID = 1L;
     
     private final OptionParser parser;
     private final CommandLineMetaData metaData;
 
-    public CommandLineException(OptionParser parser, CommandLineMetaData metaData, Exception cause) {
-        super(cause.getMessage(), cause);
+    public UsageException(OptionParser parser, CommandLineMetaData metaData, Exception cause) {
+        super(cause);
         this.parser = parser;
         this.metaData = metaData;
     }
+    
+    public String getMessage() {
+        Throwable cause = getCause();
+        return cause == null ? null : cause.getMessage();
+    }
 
     public void printUsage() {
-        err.print("Error: ");
-        err.println(getCause().getMessage());
-        err.println();
+        String message = getMessage();
+        if (message != null) {
+            err.print("Error: ");
+            err.println(getCause().getMessage());
+        }
         
+        err.println();
+
         try {
             parser.printHelpOn(err);
         } catch (IOException e) {

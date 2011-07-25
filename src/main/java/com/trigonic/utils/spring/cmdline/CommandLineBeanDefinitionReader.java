@@ -16,6 +16,8 @@
 
 package com.trigonic.utils.spring.cmdline;
 
+import java.util.Arrays;
+
 import joptsimple.OptionException;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -37,12 +39,17 @@ public class CommandLineBeanDefinitionReader {
 
     public <T> void parse(Class<T> beanClass, String[] args) {
         OptionParser parser = new OptionParser();
+        parser.acceptsAll(Arrays.asList("h", "help"), "Usage information");
+        
         CommandLineMetaData metaData = new CommandLineMetaData(beanClass);
         metaData.register(parser);
 
         OptionSet optionSet;
         try {
             optionSet = parser.parse(args);
+            if (optionSet.has("help")) {
+                throw new UsageException(parser, metaData, null);  // triggers usage
+            }
 
             CommandLineBeanDefinition beanDef = new CommandLineBeanDefinition(beanClass, metaData, optionSet);
             String beanName = beanNameGenerator.generateBeanName(beanDef, this.registry);
@@ -50,9 +57,9 @@ public class CommandLineBeanDefinitionReader {
             BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(beanDef, beanName);
             BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
         } catch (OptionException e) {
-            throw new CommandLineException(parser, metaData, e);
+            throw new UsageException(parser, metaData, e);
         } catch (OperandException e) {
-            throw new CommandLineException(parser, metaData, e);
+            throw new UsageException(parser, metaData, e);
         }
     }
 }

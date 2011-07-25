@@ -40,7 +40,7 @@ public class CommandLineAppContext extends XmlResourceApplicationContext {
     public <T extends Runnable> void run(Class<T> beanClass, String[] args) {
         try {
             parseAndGet(beanClass, args).run();
-        } catch (CommandLineException e) {
+        } catch (UsageException e) {
             e.printUsage();
         } catch (Exception e) {
             e.printStackTrace();

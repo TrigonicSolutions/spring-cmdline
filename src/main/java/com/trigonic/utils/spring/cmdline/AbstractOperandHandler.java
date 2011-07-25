@@ -41,7 +41,7 @@ public abstract class AbstractOperandHandler implements OperandHandler {
         List<String> nonOptionArgs = optionSet.nonOptionArguments();
         if (operand.index() < nonOptionArgs.size()) {
             Object propertyValue = nonOptionArgs.get(operand.index());
-            if (Iterable.class.isAssignableFrom(valueType) || valueType.isArray()) {
+            if (hasMultipleValues()) {
                 propertyValue = nonOptionArgs.subList(operand.index(), nonOptionArgs.size());
             }
             propertyValues.add(propertyName, propertyValue);
@@ -64,5 +64,9 @@ public abstract class AbstractOperandHandler implements OperandHandler {
     
     public Object getDescription() {
         return operand.description();
+    }
+    
+    public boolean hasMultipleValues() {
+        return Iterable.class.isAssignableFrom(valueType) || valueType.isArray();
     }
 }

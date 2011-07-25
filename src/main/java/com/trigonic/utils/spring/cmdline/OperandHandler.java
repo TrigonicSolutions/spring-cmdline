@@ -30,4 +30,6 @@ public interface OperandHandler {
     boolean isRequired();
 
     Object getDescription();
+    
+    boolean hasMultipleValues();
 }

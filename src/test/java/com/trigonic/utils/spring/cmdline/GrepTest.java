@@ -30,6 +30,26 @@ import org.springframework.core.io.ClassPathResource;
 
 public class GrepTest {
     @Test
+    public void helpShort() {
+        try {
+            create("-h");
+            fail("expected UsageException");
+        } catch (UsageException e) {
+            assertNull(e.getMessage());
+        }
+    }
+    
+    @Test
+    public void helpLong() {
+        try {
+            create("--help");
+            fail("expected UsageException");
+        } catch (UsageException e) {
+            assertNull(e.getMessage());
+        }
+    }
+    
+    @Test
     public void ignoreCaseShort() {
         Grep grep = create("-i", "foo", "bar");
         assertTrue(grep._isIgnoreCase());
@@ -54,8 +74,8 @@ public class GrepTest {
     public void patternFileMissingArgument() {
         try {
             create("-f");
-            fail("excepted CommandLineException");
-        } catch (CommandLineException e) {
+            fail("expected UsageException");
+        } catch (UsageException e) {
             assertEquals("Option ['f', 'file'] requires an argument", e.getMessage());
         }
     }
@@ -109,8 +129,8 @@ public class GrepTest {
     public void missingPattern() {
         try {
             create();
-            fail("excepted CommandLineException");
-        } catch (CommandLineException e) {
+            fail("expected UsageException");
+        } catch (UsageException e) {
             assertEquals("Operand [pattern] is required", e.getMessage());
         }
     }
@@ -119,8 +139,8 @@ public class GrepTest {
     public void missingFiles() {
         try {
             create("foo");
-            fail("excepted CommandLineException");
-        } catch (CommandLineException e) {
+            fail("expected UsageException");
+        } catch (UsageException e) {
             assertEquals("Operand [files] is required", e.getMessage());
         }
     }

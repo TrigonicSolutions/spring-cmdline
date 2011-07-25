@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -42,6 +43,26 @@ public class CommandLineMetaData {
         populateOptionFields(beanClass);
         populateOperandMethods(beanClass);
         populateOperandFields(beanClass);
+        validateOperands();
+    }
+
+    private void validateOperands() {
+        int expectedIndex = 0;
+        boolean remainderConsumed = false;
+        for (Entry<Operand, OperandHandler> entry : operands.entrySet()) {
+            if (remainderConsumed) {
+                throw new IllegalArgumentException(String.format("Operand index [%d] illegally follows multi-value operand"));
+            }
+            Operand operand = entry.getKey();
+            if (operand.index() < expectedIndex) {
+                throw new IllegalArgumentException(String.format("Duplicate operand index [%d]", operand.index()));
+            } else if (operand.index() > expectedIndex) {
+                throw new IllegalArgumentException(String.format("Missing operand index [%d]", expectedIndex));
+            }
+            expectedIndex = operand.index() + 1;
+            OperandHandler operandHandler = entry.getValue();
+            remainderConsumed = operandHandler.hasMultipleValues();
+        }
     }
 
     public Collection<OptionHandler> getOptionHandlers() {
