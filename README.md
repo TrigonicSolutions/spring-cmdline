@@ -10,7 +10,7 @@ application with options and operands.
     }
 
     dependencies {
-        classpath 'com.trigonic:spring-cmdline:0.1'
+        classpath 'com.trigonic:spring-cmdline:0.3'
     }
 
 ## Application Usage

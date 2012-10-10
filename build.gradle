@@ -3,17 +3,18 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'eclipse'
 
-group = 'com.trigonic'
-artifact = 'spring-cmdline'
-version = '0.3'
+project.ext {
+    group = 'com.trigonic'
+    version = '0.3'
 
-springVersion = '3.0.5.RELEASE'
-joptSimpleVersion = '3.3'
+    springVersion = '3.0.5.RELEASE'
+    joptSimpleVersion = '3.3'
+}
 
 def props = new Properties();
 def localProperties = new File("local.properties")
 if (localProperties.exists()) localProperties.withInputStream { props.load(it) }
-props.each { project.setProperty(it.key, it.value) }
+props.each { project.ext.setProperty(it.key, it.value) }
 
 configurations {
     deployerJars
@@ -56,12 +57,6 @@ artifacts {
 
 signing {
     sign configurations.archives
-}
-
-pgp {
-    secretKeyRingFile = new File("${System.properties['user.home']}/.gnupg/secring.gpg")
-    keyId = props.get('sign.key.id')
-    password = props.get('sign.key.password')
 }
 
 uploadArchives {
@@ -116,6 +111,6 @@ uploadArchives {
 }
 
 task createWrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-6'
+    gradleVersion = '1.2'
 }
 
