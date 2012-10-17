@@ -1,23 +1,23 @@
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'signing'
+apply plugin: 'nexus'
 apply plugin: 'eclipse'
 
-project.ext {
-    group = 'com.trigonic'
-    version = '0.3'
+group = 'com.trigonic'
+version = '0.4-SNAPSHOT'
 
-    springVersion = '3.0.5.RELEASE'
-    joptSimpleVersion = '3.3'
+project.ext {
+    springVersion = '3.1.+'
+    joptSimpleVersion = '4.3'
 }
 
-def props = new Properties();
-def localProperties = new File("local.properties")
-if (localProperties.exists()) localProperties.withInputStream { props.load(it) }
-props.each { project.ext.setProperty(it.key, it.value) }
+buildscript {
+    repositories {
+        mavenCentral()
+    }
 
-configurations {
-    deployerJars
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.2'
+    }
 }
 
 repositories {
@@ -34,9 +34,7 @@ dependencies {
     
     testCompile 'junit:junit:4.+'
 
-    testRuntime 'org.slf4j:slf4j-simple:1.6.1'
-
-    deployerJars 'org.apache.maven.wagon:wagon-http:1.0-beta-7'
+    testRuntime 'org.slf4j:slf4j-simple:1.6.+'
 }
 
 task packageJavadoc(type: Jar, dependsOn: 'javadoc') {
@@ -55,56 +53,42 @@ artifacts {
     archives packageSources
 }
 
-signing {
-    sign configurations.archives
-}
+modifyPom {
+    project {
+        name 'spring-cmdline - Spring Command Line'
+        packaging 'jar'
+        description 'This library provides a Spring mechanism for launching a command-line application with options and operands.'
+        url 'https://github.com/TrigonicSolutions/spring-cmdline'
+        inceptionYear '2011'
 
-uploadArchives {
-    repositories.mavenDeployer {
-        configuration = configurations.deployerJars
-
-        beforeDeployment { MavenDeployment deployment -> signPom(deployment) }
-
-        repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
-            authentication(userName: props.get('maven.repository.user'), password: props.get('maven.repository.password'))
+        parent {
+            groupId 'org.sonatype.oss'
+            artifactId 'oss-parent'
+            version '7'
         }
-
-        pom.project {
-            name 'spring-cmdline - Spring Command Line'
-            packaging 'jar'
-            description 'This library provides a Spring mechanism for launching a command-line application with options and operands.'
-            url 'https://github.com/TrigonicSolutions/spring-cmdline'
-            inceptionYear '2011'
-
-            parent {
-                groupId 'org.sonatype.oss'
-                artifactId 'oss-parent'
-                version '7'
+ 
+        scm {
+            url 'scm:git://github.com/TrigonicSolutions/spring-cmdline.git'
+            connection 'scm:git://github.com/TrigonicSolutions/spring-cmdline.git'
+        }
+ 
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
             }
-     
-            scm {
-                url 'scm:git://github.com/TrigonicSolutions/spring-cmdline.git'
-                connection 'scm:git://github.com/TrigonicSolutions/spring-cmdline.git'
-            }
-     
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
+        }
+ 
+        developers {
+            developer {
+                id 'akrueger'
+                name 'Alan Krueger'
+                email 'alan@trigonic.com'
+                roles{
+                    role 'Developer'
                 }
-            }
-     
-            developers {
-                developer {
-                    id 'akrueger'
-                    name 'Alan Krueger'
-                    email 'alan@trigonic.com'
-                    roles{
-                        role 'Developer'
-                    }
-                    timezone '-6'
-                }
+                timezone '-6'
             }
         }
     }
